@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 # Konfigurasi Halaman Web
 st.set_page_config(page_title="Simulasi Inventory", layout="wide")
 st.title("📦 Dashboard Simulasi Inventory Retail")
-st.markdown("Proyek Akhir Simulasi Sistem Pergudangan menggunakan logika Reorder Point (ROP).")
+st.markdown("Tugas Besar Simulasi Inventory menggunakan logika Reorder Point (ROP).")
 
 # ==========================================
 # SIDEBAR UNTUK INPUT VARIABEL
