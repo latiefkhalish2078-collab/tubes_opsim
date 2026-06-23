@@ -23,25 +23,24 @@ def jalankan_simulasi(inv_awal, rop, qty_order, lead_time, hari_simulasi, mode_d
     cetak_garis()
 
     for hari in range(1, hari_simulasi + 1):
-        # 1. Cek barang datang pagi ini
+        # Cek barang datang pagi
         barang_datang = jadwal_kedatangan.get(hari, 0)
         stok_pagi = stok_awal_hari_ini + barang_datang
         
-        # 2. Penentuan Demand (Sesuai Opsi Tambahan Random Number)
+        # Penentuan Demand 
         if mode_demand == '1' and demand_csv and (hari - 1) < len(demand_csv):
             demand = demand_csv[hari - 1]
             catatan_demand = f"{demand} (CSV)"
         else:
-            # Menggunakan Random Number Generator (Distribusi Normal: Mean=136, StdDev=40)
-            # Disesuaikan dengan karakteristik dataset retail asli Anda
+            # Random Number
             demand = max(0, int(random.normalvariate(136, 40)))
             catatan_demand = f"{demand} (RND)"
             
-        # 3. Hitung stok sore dan shortage
+        # Hitung stok sore dan shortage
         stok_sore = max(0, stok_pagi - demand)
         shortage = max(0, demand - stok_pagi)
         
-        # 4. Logika Pemesanan Barang (Mencegah Double Order)
+        # Logika Pemesanan Barang (Mencegah Double Order)
         status_pesan = "Tidak"
         sedang_menunggu = any(k > hari for k in jadwal_kedatangan.keys())
         
@@ -51,13 +50,12 @@ def jalankan_simulasi(inv_awal, rop, qty_order, lead_time, hari_simulasi, mode_d
             jadwal_kedatangan[hari_datang] = qty_order
             total_pesanan += 1
 
-        # 5. Rekap Statistik
+        # Rekap Statistik
         total_shortage += shortage
         if stok_sore == 0:
             hari_stockout += 1
         total_stok_akhir += stok_sore
 
-        # 6. Cetak baris data ke terminal
         print(f"| {str(hari).center(6)} | {str(barang_datang).center(13)} | {str(stok_pagi).center(14)} | {catatan_demand.center(17)} | {str(stok_sore).center(14)} | {str(shortage).center(10)} | {status_pesan.center(10)} |")
         
         # Persiapan hari berikutnya
@@ -65,13 +63,13 @@ def jalankan_simulasi(inv_awal, rop, qty_order, lead_time, hari_simulasi, mode_d
 
     cetak_garis()
     
-    # Menghitung Last Storage
+    # Last Storage
     last_storage = stok_sore
     rata_rata_stok = total_stok_akhir / hari_simulasi
 
     # Tampilan Analisis Performa
     print("\n" + "="*50)
-    print("           📊 HASIL EVALUASI SIMULASI            ")
+    print("             HASIL EVALUASI SIMULASI            ")
     print("="*50)
     print(f"1. Total Unit Gagal Terpenuhi (Shortage) : {total_shortage} unit")
     print(f"2. Frekuensi Pemesanan Barang (Order)    : {total_pesanan} kali")
@@ -99,12 +97,12 @@ def main():
             for row in reader:
                 if row:
                     demand_csv.append(int(row[idx]))
-        print("✅ Berhasil memuat data historis dari '50_hari_simulasi.csv'")
+        print("Berhasil memuat data historis dari '50_hari_simulasi.csv'")
     except (FileNotFoundError, ValueError, IndexError):
-        print("⚠️ Catatan: File '50_hari_simulasi.csv' tidak ditemukan/format berbeda.")
+        print("Catatan: File '50_hari_simulasi.csv' tidak ditemukan/format berbeda.")
         print("   Simulasi akan dialihkan penuh menggunakan Generator Angka Acak.")
 
-    # Pilihan Mode Pengolahan Angka Permintaan (Requirement: Random Number)
+    # Pilihan Mode Pengolahan Angka Permintaan
     print("\nPilih Metode Pembangkitan Permintaan (Demand):")
     print("[1] Menggunakan Data Aktual CSV Historis")
     print("[2] Menggunakan Bilangan Acak (Random Number Generator)")
@@ -117,10 +115,10 @@ def main():
     lead_time = int(input("Masukkan Lead Time Pengiriman (Hari): ") or 2)
     hari_simulasi = int(input("Masukkan Durasi Hari Simulasi: ") or 50)
 
-    # Jalankan simulasi siklus pertama
+    # Simulasi siklus pertama
     last_storage = jalankan_simulasi(inv_awal, rop, qty_order, lead_time, hari_simulasi, mode_demand, demand_csv)
 
-    # Logika Pengulangan Berkelanjutan menggunakan Last Storage (Requirement: Last Storage)
+    # Logika Pengulangan Berkelanjutan
     while True:
         kontinu = input("\nApakah ingin melanjutkan simulasi ke siklus berikutnya? (y/n): ").lower()
         if kontinu == 'y':
