@@ -14,7 +14,6 @@ def load_demand_data(filepath, hari_simulasi):
         df_data.columns = df_data.columns.str.strip()
         
         demand_raw = df_data['Units Sold'].tolist()
-        # Sesuaikan panjang array dengan hari simulasi
         return demand_raw[:hari_simulasi] + [0] * max(0, hari_simulasi - len(demand_raw))
     except Exception:
         return None

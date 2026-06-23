@@ -83,7 +83,6 @@ def jalankan_simulasi(inv_awal, rop, qty_order, lead_time, hari_simulasi, mode_d
 def main():
     print("="*50)
     print("    SISTEM SIMULASI OPERASIONAL INVENTORY RETAIL   ")
-    print("              (BERBASIS COMMAND LINE)              ")
     print("="*50)
 
     # Membaca data CSV pendukung jika ada
